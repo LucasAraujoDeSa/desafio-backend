@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import CategoryRoute from './Category.routes';
-import PostRoutes from './Post.routes';
+import { SessionRoute } from './session.routes';
+import UserRouter from './user.routes';
 
 const router = Router();
 
-router.use('/category', CategoryRoute);
-router.use('/posts', PostRoutes);
+router.use('/user', UserRouter);
+router.use('/session', SessionRoute);
 
 export default router;

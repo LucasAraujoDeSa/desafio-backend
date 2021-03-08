@@ -1,18 +1,17 @@
 {
   "type": "postgres",
   "host": "localhost",
-  "port": 5432,
+  "port": 5434,
   "username": "postgres",
-  "password": "**",
-  "database": "**",
-  "synchronize": true,
+  "password": "docker",
+  "database": "desafio",
   "migrations":[
-    "./src/database/migrations/*.ts"
+    "./src/api/database/migrations/*.ts"
   ],
   "entities":[
-    "./src/entities/*.ts"
+    "./src/api/entities/*.ts"
   ],
   "cli":{
-    "migrationsDir":"./src/database/migrations"
+    "migrationsDir":"./src/api/database/migrations"
   }
 }
