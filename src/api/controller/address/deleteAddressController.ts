@@ -10,9 +10,9 @@ export class DeleteAddressController {
       const addressRepository = new AddressRepository();
       const service = new DeleteAddress(addressRepository);
 
-      const address = await service.execute(id);
+      await service.execute(id);
 
-      return res.status(200).json(address);
+      return res.status(200).json('address deleted');
     } catch (err) {
       return res.status(400).json(err.message);
     }
