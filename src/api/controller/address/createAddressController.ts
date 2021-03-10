@@ -6,15 +6,8 @@ import { addressValidationGroup } from '../../validators/addressValidations/addr
 export class CreateAddressController {
   public async handle(req: Request, res: Response): Promise<Response> {
     try {
-      const {
-        user_id,
-        endereço,
-        numero,
-        complemento,
-        cep,
-        cidade,
-        estado,
-      } = req.body;
+      const { id } = req.user;
+      const { endereço, numero, complemento, cep, cidade, estado } = req.body;
 
       const addressRepository = new AddressRepository();
       const service = new CreateAddress(
@@ -23,7 +16,7 @@ export class CreateAddressController {
       );
 
       const address = await service.execute({
-        user_id,
+        user_id: id,
         endereço,
         numero,
         complemento,
