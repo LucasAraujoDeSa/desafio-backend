@@ -1,19 +1,19 @@
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
-import User from '../../entities/User';
 import UserRepository from '../../repositories/user/implementations/UserRepository';
 import UpdateUser from '../../useCases/user/updateUser';
+import { userValidationGroup } from '../../validators/userValidations/userValidationGroup';
 
 export default class UpdateUserController {
   public async handle(req: Request, res: Response): Promise<Response> {
     try {
-      const { id } = req.params;
+      const { id } = req.user;
       const { nome, email, telefone, idade, peso } = req.body;
 
-      const userRepository = new UserRepository(getRepository(User));
-      const service = new UpdateUser(userRepository);
+      const userRepository = new UserRepository();
+      const service = new UpdateUser(userRepository, userValidationGroup);
 
-      const user = await service.execute(id, {
+      const user = await service.execute({
+        user_id: id,
         nome,
         email,
         telefone,

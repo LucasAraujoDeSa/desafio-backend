@@ -1,7 +1,10 @@
 import User from '../../entities/User';
+import { AlreadyExistError } from '../../errors/alreadyExistError';
 import IUserRepository from '../../repositories/user/IUserRepository';
+import { UserValidationGroup } from '../../validators/userValidations/userValidationGroup';
 
 interface IRequest {
+  user_id: string;
   nome: string;
   email: string;
   telefone: number;
@@ -10,20 +13,44 @@ interface IRequest {
 }
 
 export default class UpdateUser {
-  constructor(private repository: IUserRepository) {}
+  constructor(
+    private repository: IUserRepository,
+    private userValidationGroup: UserValidationGroup,
+  ) {}
 
-  public async execute(
-    id: string,
-    { nome, email, telefone, idade, peso }: IRequest,
-  ): Promise<User> {
-    const user = await this.repository.findById(id);
+  public async execute({
+    user_id,
+    nome,
+    email,
+    telefone,
+    idade,
+    peso,
+  }: IRequest): Promise<User> {
+    const user = await this.repository.findById(user_id);
 
     if (!user) {
       throw new Error('not exist');
     }
 
-    user.nome = nome;
+    const emailExist = await this.repository.findByEmail(email);
+
+    if (emailExist && emailExist.id !== user.id) {
+      throw new AlreadyExistError('email');
+    }
+
+    const isValid = this.userValidationGroup.validate({
+      email,
+      telefone,
+      idade,
+      peso,
+    });
+
+    if (!isValid) {
+      throw new Error('param invalid');
+    }
+
     user.email = email;
+    user.nome = nome;
     user.telefone = telefone;
     user.idade = idade;
     user.peso = peso;

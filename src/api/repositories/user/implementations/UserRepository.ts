@@ -1,10 +1,12 @@
 import { getRepository, Repository } from 'typeorm';
-import IUserDTO from '../../../dtos/user/IUserDTO';
+import IUserDTO from '../../../useCases/user/dtos/IUserDTO';
 import User from '../../../entities/User';
 import IUserRepository from '../IUserRepository';
 
 export default class UserRepository implements IUserRepository {
-  constructor(private ormRepository: Repository<User>) {
+  private ormRepository: Repository<User>;
+
+  constructor() {
     this.ormRepository = getRepository(User);
   }
 

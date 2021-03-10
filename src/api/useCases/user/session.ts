@@ -1,6 +1,7 @@
 import { sign } from 'jsonwebtoken';
 import { SecretConfig } from '../../../config/jwt';
 import User from '../../entities/User';
+import { NotExistError } from '../../errors/notExistError';
 import { IHashProvider } from '../../providers/hashProvider/HashProvider';
 import IUserRepository from '../../repositories/user/IUserRepository';
 
@@ -24,7 +25,7 @@ export class Session {
     const user = await this.repository.findByEmail(email);
 
     if (!user) {
-      throw new Error('user not exist');
+      throw new NotExistError();
     }
 
     const same = await this.hashProvider.compare(senha, user.senha);

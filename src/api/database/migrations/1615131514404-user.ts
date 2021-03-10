@@ -27,7 +27,7 @@ export default class user1615131514404 implements MigrationInterface {
           },
           {
             name: 'telefone',
-            type: 'integer',
+            type: 'bigint',
           },
           {
             name: 'idade',

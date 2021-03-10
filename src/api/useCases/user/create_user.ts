@@ -1,6 +1,8 @@
 import User from '../../entities/User';
+import { AlreadyExistError } from '../../errors/alreadyExistError';
 import { IHashProvider } from '../../providers/hashProvider/HashProvider';
 import IUserRepository from '../../repositories/user/IUserRepository';
+import { UserValidationGroup } from '../../validators/userValidations/userValidationGroup';
 
 interface IRequest {
   nome: string;
@@ -16,6 +18,7 @@ export default class CreateUser {
   constructor(
     private repository: IUserRepository,
     private hashProvider: IHashProvider,
+    private userValidationGroup: UserValidationGroup,
   ) {}
 
   public async execute({
@@ -30,7 +33,18 @@ export default class CreateUser {
     const exist = await this.repository.findByEmail(email);
 
     if (exist) {
-      throw new Error('user already exist');
+      throw new AlreadyExistError('user already exist');
+    }
+
+    const validate = this.userValidationGroup.validate({
+      email,
+      telefone,
+      idade,
+      peso,
+    });
+
+    if (!validate) {
+      throw new Error('param invalid');
     }
 
     const hash = await this.hashProvider.hash(senha);

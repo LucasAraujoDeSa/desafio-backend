@@ -1,6 +1,4 @@
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
-import User from '../../entities/User';
 import { BcryptAdapter } from '../../providers/hashProvider/implementations/bcryptAdapter';
 import UserRepository from '../../repositories/user/implementations/UserRepository';
 import { Session } from '../../useCases/user/session';
@@ -10,7 +8,7 @@ export default class CreateUserController {
     try {
       const { email, senha } = req.body;
 
-      const userRepository = new UserRepository(getRepository(User));
+      const userRepository = new UserRepository();
       const bcryptAdapter = new BcryptAdapter();
       const service = new Session(userRepository, bcryptAdapter);
 

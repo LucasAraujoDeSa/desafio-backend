@@ -1,5 +1,6 @@
 import { HashInMemory } from '../../providers/hashProvider/inMemory/hashInMemory';
 import UserInMemory from '../../repositories/user/inMemory/userInMemory';
+import { userValidationGroup } from '../../validators/userValidations/userValidationGroup';
 
 import CreateUser from './create_user';
 import ListUser from './listUser';
@@ -12,7 +13,11 @@ describe('list user', () => {
   beforeEach(() => {
     userInMemory = new UserInMemory();
     hashProvider = new HashInMemory();
-    createUser = new CreateUser(userInMemory, hashProvider);
+    createUser = new CreateUser(
+      userInMemory,
+      hashProvider,
+      userValidationGroup,
+    );
     listUser = new ListUser(userInMemory);
   });
   it('should return a list of users', async () => {

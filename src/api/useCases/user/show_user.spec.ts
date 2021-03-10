@@ -1,10 +1,12 @@
+import { NotExistError } from '../../errors/notExistError';
 import { HashInMemory } from '../../providers/hashProvider/inMemory/hashInMemory';
 import UserInMemory from '../../repositories/user/inMemory/userInMemory';
+import { userValidationGroup } from '../../validators/userValidations/userValidationGroup';
 
 import CreateUser from './create_user';
 import { ShowUser } from './show_user';
 
-describe('list user', () => {
+describe('show user', () => {
   let userInMemory: UserInMemory;
   let createUser: CreateUser;
   let hashProvider: HashInMemory;
@@ -12,10 +14,14 @@ describe('list user', () => {
   beforeEach(() => {
     userInMemory = new UserInMemory();
     hashProvider = new HashInMemory();
-    createUser = new CreateUser(userInMemory, hashProvider);
+    createUser = new CreateUser(
+      userInMemory,
+      hashProvider,
+      userValidationGroup,
+    );
     showUser = new ShowUser(userInMemory);
   });
-  it('should return a list of users', async () => {
+  it('should return a user', async () => {
     const user = await createUser.execute({
       nome: 'user1',
       email: 'user@email.com',
@@ -29,5 +35,8 @@ describe('list user', () => {
     const findUser = await showUser.execute(user.id);
 
     expect(findUser).toEqual(user);
+  });
+  it('should return a error if user not exist', async () => {
+    expect(showUser.execute('q12ed')).rejects.toBeInstanceOf(NotExistError);
   });
 });

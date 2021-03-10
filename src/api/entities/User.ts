@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import Address from './Address';
 
 enum Etinia {
   Branco = 'branco',
@@ -36,4 +37,7 @@ export default class User {
     enum: Etinia,
   })
   etinia: string;
+
+  @OneToMany(() => Address, address => address)
+  address: Address;
 }

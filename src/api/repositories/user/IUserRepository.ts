@@ -1,4 +1,4 @@
-import IUserDTO from '../../dtos/user/IUserDTO';
+import IUserDTO from '../../useCases/user/dtos/IUserDTO';
 import User from '../../entities/User';
 
 export default interface IUserRepository {

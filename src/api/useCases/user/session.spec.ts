@@ -1,5 +1,7 @@
+import { NotExistError } from '../../errors/notExistError';
 import { HashInMemory } from '../../providers/hashProvider/inMemory/hashInMemory';
 import UserInMemory from '../../repositories/user/inMemory/userInMemory';
+import { userValidationGroup } from '../../validators/userValidations/userValidationGroup';
 
 import CreateUser from './create_user';
 import { Session } from './session';
@@ -13,7 +15,11 @@ describe('authenticate user', () => {
     userInMemory = new UserInMemory();
     hashProvider = new HashInMemory();
     session = new Session(userInMemory, hashProvider);
-    createUser = new CreateUser(userInMemory, hashProvider);
+    createUser = new CreateUser(
+      userInMemory,
+      hashProvider,
+      userValidationGroup,
+    );
   });
   it('should authenticate a user', async () => {
     await createUser.execute({
@@ -40,7 +46,7 @@ describe('authenticate user', () => {
         email: 'user@email.com',
         senha: '123',
       }),
-    ).rejects.toBeInstanceOf(Error);
+    ).rejects.toBeInstanceOf(NotExistError);
   });
 
   it('should throw a Error if password compare return false', async () => {

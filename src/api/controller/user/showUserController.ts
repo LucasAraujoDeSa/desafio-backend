@@ -1,15 +1,13 @@
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
-import User from '../../entities/User';
 import UserRepository from '../../repositories/user/implementations/UserRepository';
 import { ShowUser } from '../../useCases/user/show_user';
 
 export default class ShowUserController {
   public async handle(req: Request, res: Response): Promise<Response> {
     try {
-      const { id } = req.params;
+      const { id } = req.user;
 
-      const userRepository = new UserRepository(getRepository(User));
+      const userRepository = new UserRepository();
       const service = new ShowUser(userRepository);
 
       const user = await service.execute(id);
